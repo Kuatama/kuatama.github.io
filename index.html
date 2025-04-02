@@ -247,6 +247,12 @@
             remainingTimeEl.textContent = `-${formatTime(audio.duration)}`;
         });
 
+// 解决iOS设备无法自动播放的问题
+document.body.addEventListener('touchstart', function initAudio() {
+    audio.play();
+    document.body.removeEventListener('touchstart', initAudio);
+});
+
         // 启用自动播放（需用户交互）
         document.addEventListener('click', function initAudio() {
             audio.play();
