@@ -5,24 +5,48 @@
     <title>Notion Music Player Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* 新增样式部分 */
         .player {
             max-width: 500px;
             margin: 20px auto;
             padding: 25px;
-            background: #f0f3f5;
+            background: #f8f9fa;
             border-radius: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            font-family: Arial, sans-serif;
         }
 
         .song-title {
             text-align: center;
             margin-bottom: 15px;
-            font-weight: bold;
+            font-weight: 600;
             color: #2c3e50;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .progress-container {
+            height: 4px;
+            background: #ddd;
+            border-radius: 2px;
+            cursor: pointer;
+            margin: 15px 0;
+        }
+
+        .progress {
+            height: 100%;
+            background: #3498db;
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.1s linear;
         }
 
         .controls {
@@ -56,20 +80,49 @@
             background: #27ae60;
         }
 
-        /* 保持其他原有样式不变 */
+        .volume-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 15px;
+        }
+
+        .volume-slider {
+            width: 100px;
+            height: 4px;
+            -webkit-appearance: none;
+            background: #ddd;
+            border-radius: 2px;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #3498db;
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+
+        .volume-slider::-webkit-slider-thumb:hover {
+            background: #2980b9;
+        }
     </style>
 </head>
 <body>
     <div class="player">
         <audio id="audio"></audio>
         <div class="song-title" id="song-title">Loading...</div>
-        <div class="time">
+        
+        <div class="time-display">
             <span id="current-time">0:00</span>
-            <span id="duration">0:00</span>
+            <span id="remaining-time">-0:00</span>
         </div>
+
         <div class="progress-container" id="progress-container">
             <div class="progress" id="progress"></div>
         </div>
+
         <div class="controls">
             <button id="prev"><i class="fas fa-step-backward"></i></button>
             <button id="play-pause"><i class="fas fa-play"></i></button>
@@ -84,7 +137,7 @@
     </div>
 
     <script>
-        // 播放列表配置（修改这里的音乐文件路径）
+        // 播放列表配置（修改此处）
         const playlist = [
             {
                 title: "歌曲1",
@@ -102,22 +155,22 @@
         const progress = document.getElementById('progress');
         const volumeSlider = document.getElementById('volume');
         const currentTimeEl = document.getElementById('current-time');
-        const durationEl = document.getElementById('duration');
+        const remainingTimeEl = document.getElementById('remaining-time');
         const songTitleEl = document.getElementById('song-title');
         const loopBtn = document.getElementById('loop-btn');
-        
+        const progressContainer = document.getElementById('progress-container');
+
         let currentTrack = 0;
         let isLoop = false;
 
         // 初始化加载第一首歌曲
         loadTrack(currentTrack);
 
-        // 加载指定曲目
         function loadTrack(index) {
             currentTrack = index;
             audio.src = playlist[index].url;
             songTitleEl.textContent = playlist[index].title;
-            audio.play().catch(() => {/* 处理自动播放被阻止的情况 */});
+            audio.play().catch(() => {});
             playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
         }
 
@@ -132,26 +185,56 @@
             }
         });
 
-        // 下一曲
+        // 进度条控制
+        audio.addEventListener('timeupdate', updateProgress);
+        
+        progressContainer.addEventListener('click', (e) => {
+            const width = progressContainer.clientWidth;
+            const clickX = e.offsetX;
+            audio.currentTime = (clickX / width) * audio.duration;
+        });
+
+        // 音量控制
+        volumeSlider.addEventListener('input', (e) => {
+            audio.volume = e.target.value;
+        });
+
+        // 时间格式化
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return "0:00";
+            const minutes = Math.floor(seconds / 60);
+            seconds = Math.floor(seconds % 60);
+            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // 更新进度和时间
+        function updateProgress() {
+            const progressPercent = (audio.currentTime / audio.duration) * 100;
+            progress.style.width = `${progressPercent}%`;
+            currentTimeEl.textContent = formatTime(audio.currentTime);
+            const remaining = audio.duration - audio.currentTime;
+            remainingTimeEl.textContent = `-${formatTime(remaining)}`;
+        }
+
+        // 曲目切换
         document.getElementById('next').addEventListener('click', () => {
             currentTrack = (currentTrack + 1) % playlist.length;
             loadTrack(currentTrack);
         });
 
-        // 上一曲
         document.getElementById('prev').addEventListener('click', () => {
             currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
             loadTrack(currentTrack);
         });
 
-        // 循环模式切换
+        // 循环模式
         loopBtn.addEventListener('click', () => {
             isLoop = !isLoop;
             loopBtn.classList.toggle('active', isLoop);
             audio.loop = isLoop;
         });
 
-        // 自动播放下一曲（非循环模式时）
+        // 自动播放下一曲
         audio.addEventListener('ended', () => {
             if (!isLoop) {
                 currentTrack = (currentTrack + 1) % playlist.length;
@@ -159,10 +242,12 @@
             }
         });
 
-        // 保持其他原有功能（进度条、音量控制等）
-        // ...（原有JavaScript代码保持不变）
+        // 初始化元数据
+        audio.addEventListener('loadedmetadata', () => {
+            remainingTimeEl.textContent = `-${formatTime(audio.duration)}`;
+        });
 
-        // 自动播放尝试
+        // 启用自动播放（需用户交互）
         document.addEventListener('click', function initAudio() {
             audio.play();
             document.removeEventListener('click', initAudio);
