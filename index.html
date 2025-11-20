@@ -13,7 +13,7 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, ##FF69B4 0%, #FFFFFF 100%);
+  background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -83,7 +83,7 @@ body {
   content: '';
   position: absolute;
   height: 100%;
-  background: linear-gradient(90deg, #667eea, #764ba2);
+  background: linear-gradient(90deg, #fbc2eb, #f3a4d4);
   width: var(--progress, 0%);
   border-radius: 3px;
   transition: width 0.1s linear;
@@ -192,7 +192,7 @@ body {
 
 .playlist-item.active {
   background: rgba(255, 255, 255, 0.6);
-  color: #667eea;
+  color: #f3a4d4;
   transform: scale(1.02);
   font-weight: 500;
 }
@@ -201,7 +201,7 @@ body {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: rgba(102, 126, 234, 0.15);
+  background: rgba(251, 194, 235, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -211,7 +211,7 @@ body {
 }
 
 .playlist-item.active .playlist-item-number {
-  background: rgba(102, 126, 234, 0.3);
+  background: rgba(243, 164, 212, 0.4);
 }
 
 .playlist-item-info {
@@ -264,7 +264,7 @@ body {
 }
 
 .playlist::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #fbc2eb, #f3a4d4);
   border-radius: 10px;
 }
 
@@ -295,7 +295,7 @@ body {
 }
 
 .volume-icon:hover svg {
-  fill: #667eea;
+  fill: #f3a4d4;
 }
 
 .volume-slider {
@@ -312,7 +312,7 @@ body {
   content: '';
   position: absolute;
   height: 100%;
-  background: linear-gradient(90deg, ##FF69B4, ##FFFFFF);
+  background: linear-gradient(90deg, #fbc2eb, #f3a4d4);
   width: var(--volume, 100%);
   border-radius: 3px;
   transition: width 0.1s linear;
