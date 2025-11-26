@@ -1,790 +1,584 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
+<!doctype html>
+<html lang="zh" data-lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>墨染时光 | 设计思维与数字生活</title>
-    <!-- 引入所需资源 -->
-    <link rel="stylesheet" href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #4A6CF7;
-            --primary-light: #6A8AFF;
-            --primary-dark: #2E4ED9;
-            --secondary: #FF6B8B;
-            --accent: #00D4FF;
-            --radius: 12px;
-            --transition: all 0.3s ease;
-        }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Cecily Dance Company — 舞团官方网站</title>
+<meta name="description" content="Cecily Dance Company — 专业舞团官网。演出、编舞、教学、巡演、预定。" />
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&family=Great+Vibes&display=swap" rel="stylesheet">
 
-        body {
-            font-family: Tahoma,Arial,Roboto,"Droid Sans","Helvetica Neue","Droid Sans Fallback","Heiti SC","Hiragino Sans GB",Simsun,sans-serif;
-            transition: var(--transition);
-        }
+<style>
+  :root{
+    --bg:#050507;
+    --panel: rgba(255,255,255,0.03);
+    --muted:#cbd5e1;
+    --gold: #ffd166;
+    --accent: #7cf2ff;
+    --glass: rgba(255,255,255,0.04);
+    --maxw:1200px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family: "Montserrat", system-ui, -apple-system, "Noto Sans SC", "Helvetica Neue", Arial;
+    background:var(--bg);
+    color:#fff;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    overflow-x:hidden;
+  }
 
-        /* 深色模式样式 */
-        .dark {
-            --bg-primary: #1a1a2e;
-            --bg-secondary: #2d3047;
-            --text-primary: #f8f9fa;
-            --text-secondary: #adb5bd;
-            --text-tertiary: #8a94a6;
-            --border-color: #495057;
-            --card-bg: #2d3047;
-            --shadow-color: rgba(0, 0, 0, 0.3);
-        }
+  /* ---------- Background video & smoke ---------- */
+  video#bg-video{
+    position:fixed; inset:0;
+    width:100%; height:100%;
+    object-fit:cover;
+    z-index:-3;
+    filter:brightness(0.34) saturate(1.05);
+    transition:0.6s;
+  }
+  .bg-overlay{
+    position:fixed; inset:0; z-index:-2;
+    background: linear-gradient(180deg, rgba(0,0,0,0.35), rgba(2,2,6,0.6));
+    pointer-events:none;
+  }
+  .smoke{
+    position:fixed; inset:-10% -20% -10% -20%; z-index:-1; pointer-events:none;
+    background-image: url('https://i.ibb.co/YB96S9Q/smoke.png');
+    background-repeat: repeat;
+    opacity:0.16;
+    mix-blend-mode: screen;
+    animation: drift 38s linear infinite;
+    filter: blur(8px) saturate(1.05);
+  }
+  @keyframes drift{from{background-position:0 0}to{background-position:2000px 1200px}}
 
-        /* 浅色模式样式 */
-        .light {
-            --bg-primary: #f8f9fa;
-            --bg-secondary: #ffffff;
-            --text-primary: #1a1a2e;
-            --text-secondary: #6c757d;
-            --text-tertiary: #8a94a6;
-            --border-color: #e9ecef;
-            --card-bg: #ffffff;
-            --shadow-color: rgba(0, 0, 0, 0.08);
-        }
+  /* ---------- Header / Nav ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0;
+    z-index:50; display:flex; align-items:center; justify-content:space-between;
+    padding:14px 22px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-bottom:1px solid rgba(255,255,255,0.03);
+    backdrop-filter: blur(8px);
+  }
+  .brand{
+    display:flex; align-items:center; gap:12px;
+  }
+  .logo-svg{
+    width:54px; height:54px; display:inline-block;
+    border-radius:10px; padding:8px;
+    background: linear-gradient(135deg, rgba(255,209,102,0.06), rgba(124,242,255,0.03));
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6), 0 0 20px rgba(124,242,255,0.02) inset;
+  }
+  .brand h1{font-size:16px;margin:0;letter-spacing:1px}
+  .brand p{margin:0;font-size:12px;color:var(--muted)}
+  nav{display:flex;gap:18px;align-items:center}
+  nav a{
+    color:var(--muted); text-decoration:none; font-size:15px; padding:8px 10px; border-radius:8px;
+  }
+  nav a:hover{ color:var(--gold); background:rgba(255,255,255,0.02) }
 
-        /* 应用主题变量 */
-        body {
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-        }
+  /* language toggle */
+  .lang-switch{ margin-left:6px; font-size:13px; cursor:pointer; color:var(--muted); background:transparent; border:none }
 
-        .bg-card {
-            background-color: var(--card-bg);
-        }
+  /* ---------- Hero ---------- */
+  .hero{
+    display:flex; align-items:center; justify-content:center;
+    height:86vh; min-height:560px; padding-top:60px;
+    position:relative; text-align:center;
+  }
+  .hero-inner{
+    width:100%; max-width:var(--maxw); padding:36px; margin:auto;
+    position:relative; z-index:20;
+  }
+  .hero-title{
+    font-size:clamp(28px,6vw,54px);
+    font-weight:700; letter-spacing:2px; margin:0;
+    color: #fff;
+    text-shadow: 0 8px 40px rgba(0,0,0,0.75), 0 0 18px rgba(255,215,102,0.06);
+  }
+  .hero-sub{
+    margin-top:12px; color:var(--muted); font-size:18px;
+  }
+  .signature{
+    font-family: "Great Vibes", cursive;
+    font-size:44px; color:var(--accent); margin-top:10px; opacity:0.95;
+    text-shadow: 0 6px 30px rgba(124,242,255,0.08);
+  }
+  .hero-ctas{ margin-top:18px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap }
+  .btn{
+    padding:10px 16px;border-radius:10px; background:linear-gradient(90deg,var(--gold),#ffb86b);
+    color:#111; font-weight:700; text-decoration:none;
+    box-shadow: 0 10px 30px rgba(255,209,102,0.08);
+  }
+  .btn.ghost{ background:transparent; color:var(--muted); border:1px solid rgba(255,255,255,0.04) }
 
-        .text-primary {
-            color: var(--text-primary);
-        }
+  /* ---------- Spotlight follows mouse ---------- */
+  .spotlight{
+    position:fixed; pointer-events:none; z-index:5;
+    width:420px; height:420px; border-radius:50%;
+    background: radial-gradient(circle at 50% 40%, rgba(255,255,220,0.25) 0%, rgba(255,255,220,0.09) 18%, rgba(255,255,220,0.02) 40%, transparent 60%);
+    mix-blend-mode: screen; transform:translate(-50%,-50%) scale(1);
+    filter: blur(28px) saturate(1.1);
+    transition: transform .12s linear;
+  }
 
-        .text-secondary {
-            color: var(--text-secondary);
-        }
+  /* ---------- Main sections ---------- */
+  main{ position:relative; z-index:10; }
+  .section { padding:70px 24px; }
+  .container{ width:100%; max-width:var(--maxw); margin:0 auto; }
 
-        .text-tertiary {
-            color: var(--text-tertiary);
-        }
+  h2.section-title{
+    font-size:28px; color:var(--gold); text-align:center; margin:6px 0 18px 0; letter-spacing:1px;
+  }
+  p.lead{ text-align:center; color:var(--muted); max-width:900px; margin:0 auto 20px }
 
-        .border-theme {
-            border-color: var(--border-color);
-        }
+  /* ---------- Carousel gallery ---------- */
+  .gallery {
+    display:grid; grid-template-columns: 1fr 340px; gap:18px; align-items:start;
+  }
+  .carousel {
+    background:var(--panel); border-radius:14px; overflow:hidden; position:relative;
+    min-height:260px; box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+    border:1px solid rgba(255,255,255,0.03);
+  }
+  .carousel .slides img{ width:100%; height:420px; object-fit:cover; display:none }
+  .carousel .slides img.active{ display:block; animation:fadeIn .7s ease; }
+  .thumbs{
+    display:flex; flex-direction:column; gap:10px; padding:12px;
+  }
+  .thumbs img{ width:100%; height:90px; object-fit:cover; border-radius:8px; cursor:pointer; opacity:0.88; border:2px solid transparent}
+  .thumbs img.active{ border-color:var(--gold); opacity:1; transform:scale(1.02) }
 
-        .shadow-theme {
-            box-shadow: 0 4px 20px var(--shadow-color);
-        }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
 
-        /* 自定义组件样式 */
-        .card {
-            transition: var(--transition);
-            border-radius: var(--radius);
-            overflow: hidden;
-        }
+  /* ---------- Video panel ---------- */
+  .video-panel{
+    margin-top:18px; display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap;
+  }
+  .video-card{
+    flex:1 1 320px; background:var(--panel); padding:12px; border-radius:12px; border:1px solid rgba(255,255,255,0.03);
+  }
+  .video-thumb{ width:100%; height:200px; object-fit:cover; border-radius:8px; cursor:pointer; display:block }
 
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 40px var(--shadow-color);
-        }
+  /* ---------- About / Timeline ---------- */
+  .about-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:22px; align-items:start }
+  .panel{ background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:18px; border-radius:12px; border:1px solid rgba(255,255,255,0.03) }
 
-        .article-card {
-            cursor: pointer;
-        }
+  .timeline{ display:flex; flex-direction:column; gap:14px }
+  .timeline-item{ display:flex; gap:12px; align-items:flex-start }
+  .timeline-item .dot{ width:12px; height:12px; border-radius:50%; background:var(--gold); margin-top:6px; flex-shrink:0 }
+  .timeline-item .txt{ color:var(--muted); font-size:14px }
 
-        .nav-link {
-            position: relative;
-            transition: var(--transition);
-        }
+  /* ---------- Contact / Booking ---------- */
+  .contact-grid{ display:grid; grid-template-columns: 1fr 380px; gap:18px; align-items:start }
+  .contact-form input, .contact-form textarea, .contact-form select{
+    width:100%; padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.06); background:transparent; color:#fff;
+    margin-top:8px; font-size:14px;
+  }
+  .contact-form label{ font-size:13px; color:var(--muted) }
+  .contact-actions{ margin-top:10px; display:flex; gap:10px; align-items:center }
 
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary);
-            transition: var(--transition);
-        }
+  /* ---------- Footer ---------- */
+  footer{ padding:30px 18px; text-align:center; color: #9aa4b2; font-size:13px }
 
-        .nav-link:hover::after,
-        .nav-link.active::after {
-            width: 100%;
-        }
+  /* ---------- Responsive ---------- */
+  @media (max-width:980px){
+    .gallery{ grid-template-columns:1fr; }
+    .about-grid{ grid-template-columns:1fr; }
+    .contact-grid{ grid-template-columns:1fr; }
+    nav{ display:none } /* mobile: hide desktop nav; simple header */
+  }
+  @media (max-width:520px){
+    .hero-inner{ padding:18px }
+    .signature{ font-size:36px }
+  }
 
-        /* 移动端导航菜单动画 */
-        .mobile-menu {
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
+  /* hide english/zh as required */
+  [data-lang="zh"] .en{ display:none }
+  [data-lang="en"] .zh{ display:none }
 
-        .mobile-menu.hidden {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-
-        .mobile-menu:not(.hidden) {
-            transform: translateX(0);
-            opacity: 1;
-        }
-
-        /* 二维码弹窗 */
-        .modal {
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        .modal.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .modal:not(.hidden) {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        /* Hero背景动画 */
-        .hero-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: -1;
-        }
-
-        .bg-shape {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            animation: float 15s infinite ease-in-out;
-        }
-
-        .bg-shape:nth-child(1) {
-            width: 150px;
-            height: 150px;
-            top: 10%;
-            left: 5%;
-            animation-delay: 0s;
-        }
-
-        .bg-shape:nth-child(2) {
-            width: 100px;
-            height: 100px;
-            top: 60%;
-            left: 10%;
-            animation-delay: 2s;
-        }
-
-        .bg-shape:nth-child(3) {
-            width: 200px;
-            height: 200px;
-            top: 20%;
-            right: 5%;
-            animation-delay: 4s;
-        }
-
-        .bg-shape:nth-child(4) {
-            width: 80px;
-            height: 80px;
-            bottom: 10%;
-            right: 15%;
-            animation-delay: 6s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
-        }
-
-        /* 轮播图样式 */
-        .carousel-item {
-            flex: 0 0 100%;
-            transition: transform 0.5s ease;
-        }
-
-        .carousel-image {
-            width: 100%;
-            height: 400px;
-            object-fit: cover;
-        }
-
-        /* 标签样式 */
-        .tag {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-            margin-bottom: 15px;
-        }
-
-        /* 确保深色模式下文本对比度 */
-        .dark .text-secondary {
-            color: #adb5bd;
-        }
-
-        .dark .text-tertiary {
-            color: #8a94a6;
-        }
-
-        /* 交互状态 */
-        .btn {
-            transition: var(--transition);
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid white;
-            color: white;
-        }
-
-        .btn-outline:hover {
-            background: white;
-            color: var(--primary);
-        }
-    </style>
+  /* small utility */
+  .muted{ color:var(--muted) }
+</style>
 </head>
-<body class="light">
-    <!-- 导航栏 -->
-    <header class="sticky top-0 z-50 bg-card shadow-theme">
-        <div class="container mx-auto px-4 py-4">
-            <div class="flex justify-between items-center">
-                <!-- Logo -->
-                <div class="text-2xl font-bold text-primary" style="font-family: 'Noto Serif SC', serif;">
-                    墨染时光
-                </div>
+<body>
 
-                <!-- 桌面导航 -->
-                <nav class="hidden md:flex items-center space-x-8">
-                    <a href="#" class="nav-link text-primary hover:text-blue-500 active">首页</a>
-                    <div class="relative group">
-                        <a href="#" class="nav-link text-primary hover:text-blue-500 flex items-center">
-                            分类 <i class="fas fa-chevron-down ml-1 text-xs"></i>
-                        </a>
-                        <div class="absolute left-0 mt-2 w-48 bg-card rounded-lg shadow-lg py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10 border border-theme">
-                            <a href="#" class="block px-4 py-2 text-primary hover:bg-gray-100 dark:hover:bg-gray-700">前端开发</a>
-                            <a href="#" class="block px-4 py-2 text-primary hover:bg-gray-100 dark:hover:bg-gray-700">设计思维</a>
-                            <a href="#" class="block px-4 py-2 text-primary hover:bg-gray-100 dark:hover:bg-gray-700">数字生活</a>
-                        </div>
-                    </div>
-                    <a href="#" class="nav-link text-primary hover:text-blue-500">归档</a>
-                    <a href="#" class="nav-link text-primary hover:text-blue-500">关于</a>
-                    <a href="#" class="nav-link text-primary hover:text-blue-500">联系</a>
-                </nav>
+  <!-- Background video: 替换下面 src 为你的演出/舞台视频（mp4）-->
+  <video id="bg-video" autoplay muted loop playsinline>
+    <source src="https://cdn.pixabay.com/vimeo/458332206/dance-47983.mp4?width=1280" type="video/mp4">
+    <!-- 如果你想使用YouTube或无法播放的视频，浏览器会显示背景遮罩 -->
+  </video>
 
-                <!-- 右侧操作区 -->
-                <div class="flex items-center space-x-4">
-                    <!-- 主题切换按钮 -->
-                    <button id="themeToggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" aria-label="切换主题">
-                        <i class="fas fa-moon text-primary"></i>
-                    </button>
+  <div class="bg-overlay"></div>
+  <div class="smoke" aria-hidden="true"></div>
 
-                    <!-- 二维码按钮 -->
-                    <button id="qrcodeToggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" aria-label="显示二维码">
-                        <i class="fas fa-qrcode text-primary"></i>
-                    </button>
-
-                    <!-- 移动端菜单按钮 -->
-                    <button id="mobileMenuToggle" class="md:hidden p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" aria-label="菜单">
-                        <i class="fas fa-bars text-primary"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- 移动端导航菜单 -->
-            <div id="mobileMenu" class="mobile-menu md:hidden hidden fixed top-0 left-0 w-full h-full bg-card z-50 p-6">
-                <div class="flex justify-between items-center mb-8">
-                    <div class="text-2xl font-bold text-primary" style="font-family: 'Noto Serif SC', serif;">
-                        墨染时光
-                    </div>
-                    <button id="mobileMenuClose" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
-                        <i class="fas fa-times text-primary"></i>
-                    </button>
-                </div>
-                <nav class="flex flex-col space-y-6">
-                    <a href="#" class="text-xl text-primary font-medium hover:text-blue-500">首页</a>
-                    <div class="space-y-2">
-                        <a href="#" class="text-xl text-primary font-medium hover:text-blue-500 flex items-center justify-between">
-                            分类 <i class="fas fa-chevron-down"></i>
-                        </a>
-                        <div class="pl-4 space-y-2">
-                            <a href="#" class="block text-lg text-secondary hover:text-blue-500">前端开发</a>
-                            <a href="#" class="block text-lg text-secondary hover:text-blue-500">设计思维</a>
-                            <a href="#" class="block text-lg text-secondary hover:text-blue-500">数字生活</a>
-                        </div>
-                    </div>
-                    <a href="#" class="text-xl text-primary font-medium hover:text-blue-500">归档</a>
-                    <a href="#" class="text-xl text-primary font-medium hover:text-blue-500">关于</a>
-                    <a href="#" class="text-xl text-primary font-medium hover:text-blue-500">联系</a>
-                </nav>
-            </div>
-        </div>
-    </header>
-
-    <!-- 主要内容区域 -->
-    <main>
-        <!-- Hero区域 -->
-        <section class="relative py-16 md:py-20 overflow-hidden">
-            <div class="hero-bg">
-                <div class="bg-shape"></div>
-                <div class="bg-shape"></div>
-                <div class="bg-shape"></div>
-                <div class="bg-shape"></div>
-            </div>
-            <div class="container mx-auto px-4 relative z-10">
-                <div class="max-w-3xl mx-auto text-center">
-                    <h1 class="text-4xl md:text-5xl font-bold mb-6 text-primary" style="font-family: 'Noto Serif SC', serif;">
-                        墨染时光，记录思想的痕迹
-                    </h1>
-                    <p class="text-lg md:text-xl mb-8 text-secondary">
-                        一个专注于设计思维、前端技术与数字生活的前沿博客
-                    </p>
-                    <div class="flex flex-wrap justify-center gap-4">
-                        <button class="btn btn-primary px-6 py-3 rounded-lg font-medium">
-                            开始阅读
-                        </button>
-                        <button class="btn btn-outline px-6 py-3 rounded-lg font-medium">
-                            了解更多
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 精选文章轮播 -->
-        <section class="py-12">
-            <div class="container mx-auto px-4">
-                <h2 class="text-2xl md:text-3xl font-bold mb-8 text-primary">精选文章</h2>
-                
-                <div class="relative overflow-hidden rounded-xl shadow-theme">
-                    <div id="carousel" class="flex transition-transform duration-500">
-                        <!-- 轮播项 1 -->
-                        <div class="carousel-item relative">
-                            <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485" 
-                                 alt="CSS Grid布局" 
-                                 class="carousel-image">
-                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-6 text-white">
-                                <span class="tag">前端开发</span>
-                                <h3 class="text-2xl font-bold mb-2">深入理解CSS Grid布局</h3>
-                                <p class="mb-4">掌握CSS Grid布局的核心概念和实际应用，创建复杂而灵活的网页布局。</p>
-                                <button class="text-white font-medium flex items-center">
-                                    阅读全文 <i class="fas fa-arrow-right ml-2"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- 轮播项 2 -->
-                        <div class="carousel-item relative">
-                            <img src="https://images.unsplash.com/photo-1655720828018-edd2daec9349" 
-                                 alt="用户体验设计" 
-                                 class="carousel-image">
-                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-6 text-white">
-                                <span class="tag">设计思维</span>
-                                <h3 class="text-2xl font-bold mb-2">用户体验设计的未来</h3>
-                                <p class="mb-4">探索人工智能如何改变设计流程，以及在自动化与人性化之间找到平衡点。</p>
-                                <button class="text-white font-medium flex items-center">
-                                    阅读全文 <i class="fas fa-arrow-right ml-2"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 轮播导航 -->
-                    <button id="carouselPrev" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 rounded-full w-10 h-10 flex items-center justify-center">
-                        <i class="fas fa-chevron-left text-gray-800"></i>
-                    </button>
-                    <button id="carouselNext" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 rounded-full w-10 h-10 flex items-center justify-center">
-                        <i class="fas fa-chevron-right text-gray-800"></i>
-                    </button>
-                    
-                    <!-- 轮播指示器 -->
-                    <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
-                        <button class="carousel-indicator w-3 h-3 rounded-full bg-white bg-opacity-50"></button>
-                        <button class="carousel-indicator w-3 h-3 rounded-full bg-white bg-opacity-50"></button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 文章网格 -->
-        <section class="py-12">
-            <div class="container mx-auto px-4">
-                <h2 class="text-2xl md:text-3xl font-bold mb-8 text-primary">最新文章</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- 文章卡片 1 -->
-                    <article class="card article-card bg-card shadow-theme border border-theme">
-                        <div class="h-48 overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1655635949212-1d8f4f103ea1" 
-                                 alt="Web动画设计" 
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-6">
-                            <span class="inline-block bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-medium px-2.5 py-0.5 rounded-full mb-3">前端技术</span>
-                            <h3 class="text-xl font-bold mb-3 text-primary">Web动画设计：提升用户体验的微妙艺术</h3>
-                            <p class="text-secondary mb-4">探索如何通过精心设计的动画提升网站的用户体验和互动性，创造流畅自然的用户界面。</p>
-                            <div class="flex justify-between items-center text-sm text-tertiary">
-                                <span>2023年10月20日</span>
-                                <span>10分钟阅读</span>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- 文章卡片 2 -->
-                    <article class="card article-card bg-card shadow-theme border border-theme">
-                        <div class="h-48 overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e" 
-                                 alt="响应式设计" 
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-6">
-                            <span class="inline-block bg-pink-100 dark:bg-pink-900 text-pink-800 dark:text-pink-200 text-xs font-medium px-2.5 py-0.5 rounded-full mb-3">UI设计</span>
-                            <h3 class="text-xl font-bold mb-3 text-primary">响应式设计的最佳实践</h3>
-                            <p class="text-secondary mb-4">学习创建在各种设备上都能完美展示的响应式网站的关键技巧和最佳实践。</p>
-                            <div class="flex justify-between items-center text-sm text-tertiary">
-                                <span>2023年10月18日</span>
-                                <span>15分钟阅读</span>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- 文章卡片 3 -->
-                    <article class="card article-card bg-card shadow-theme border border-theme">
-                        <div class="h-48 overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f" 
-                                 alt="色彩心理学" 
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-6">
-                            <span class="inline-block bg-teal-100 dark:bg-teal-900 text-teal-800 dark:text-teal-200 text-xs font-medium px-2.5 py-0.5 rounded-full mb-3">设计理论</span>
-                            <h3 class="text-xl font-bold mb-3 text-primary">色彩心理学在UI设计中的应用</h3>
-                            <p class="text-secondary mb-4">了解色彩如何影响用户情绪和行为，以及如何在设计中有效运用色彩创造更好的用户体验。</p>
-                            <div class="flex justify-between items-center text-sm text-tertiary">
-                                <span>2023年10月15日</span>
-                                <span>8分钟阅读</span>
-                            </div>
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <!-- 侧边栏和更多内容 -->
-        <section class="py-12">
-            <div class="container mx-auto px-4">
-                <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                    <!-- 主要内容 -->
-                    <div class="lg:col-span-3">
-                        <h2 class="text-2xl md:text-3xl font-bold mb-8 text-primary">热门文章</h2>
-                        <div class="space-y-6">
-                            <!-- 文章 1 -->
-                            <article class="card article-card bg-card shadow-theme border border-theme p-6 flex flex-col md:flex-row gap-6">
-                                <div class="md:w-1/3">
-                                    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa" 
-                                         alt="数字极简主义" 
-                                         class="w-full h-40 md:h-full object-cover rounded-lg">
-                                </div>
-                                <div class="md:w-2/3">
-                                    <span class="inline-block bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 text-xs font-medium px-2.5 py-0.5 rounded-full mb-3">数字生活</span>
-                                    <h3 class="text-xl font-bold mb-3 text-primary">数字极简主义：在信息过载时代保持专注</h3>
-                                    <p class="text-secondary mb-4">学习如何在信息爆炸的时代重新掌控注意力，提高生产力和生活质量，实现数字与现实的平衡。</p>
-                                    <div class="flex justify-between items-center text-sm text-tertiary">
-                                        <span>2023年10月10日</span>
-                                        <span>6分钟阅读</span>
-                                    </div>
-                                </div>
-                            </article>
-
-                            <!-- 文章 2 -->
-                            <article class="card article-card bg-card shadow-theme border border-theme p-6 flex flex-col md:flex-row gap-6">
-                                <div class="md:w-1/3">
-                                    <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485" 
-                                         alt="CSS Grid布局" 
-                                         class="w-full h-40 md:h-full object-cover rounded-lg">
-                                </div>
-                                <div class="md:w-2/3">
-                                    <span class="inline-block bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-medium px-2.5 py-0.5 rounded-full mb-3">前端开发</span>
-                                    <h3 class="text-xl font-bold mb-3 text-primary">深入理解CSS Grid布局</h3>
-                                    <p class="text-secondary mb-4">掌握CSS Grid布局的核心概念和实际应用，创建复杂而灵活的网页布局，无需依赖传统的浮动和定位技巧。</p>
-                                    <div class="flex justify-between items-center text-sm text-tertiary">
-                                        <span>2023年10月5日</span>
-                                        <span>12分钟阅读</span>
-                                    </div>
-                                </div>
-                            </article>
-                        </div>
-                    </div>
-
-                    <!-- 侧边栏 -->
-                    <aside class="lg:col-span-1 space-y-8">
-                        <!-- 关于我 -->
-                        <div class="card bg-card shadow-theme border border-theme p-6">
-                            <h3 class="text-lg font-bold mb-4 text-primary">关于我</h3>
-                            <div class="flex items-center mb-4">
-                                <div class="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-xl mr-4">
-                                    墨
-                                </div>
-                                <div>
-                                    <p class="font-medium text-primary">墨染时光</p>
-                                    <p class="text-sm text-secondary">前端开发者 & 设计师</p>
-                                </div>
-                            </div>
-                            <p class="text-secondary text-sm">一名热爱设计与技术的前端开发者，喜欢探索数字世界的无限可能，并在此记录思考与学习历程。</p>
-                        </div>
-
-                        <!-- 分类 -->
-                        <div class="card bg-card shadow-theme border border-theme p-6">
-                            <h3 class="text-lg font-bold mb-4 text-primary">文章分类</h3>
-                            <ul class="space-y-2">
-                                <li class="flex justify-between items-center py-2 border-b border-theme">
-                                    <a href="#" class="text-primary hover:text-blue-500 transition-colors">前端开发</a>
-                                    <span class="bg-gray-200 dark:bg-gray-700 text-xs font-medium px-2 py-1 rounded-full">24</span>
-                                </li>
-                                <li class="flex justify-between items-center py-2 border-b border-theme">
-                                    <a href="#" class="text-primary hover:text-blue-500 transition-colors">设计思维</a>
-                                    <span class="bg-gray-200 dark:bg-gray-700 text-xs font-medium px-2 py-1 rounded-full">18</span>
-                                </li>
-                                <li class="flex justify-between items-center py-2 border-b border-theme">
-                                    <a href="#" class="text-primary hover:text-blue-500 transition-colors">数字生活</a>
-                                    <span class="bg-gray-200 dark:bg-gray-700 text-xs font-medium px-2 py-1 rounded-full">15</span>
-                                </li>
-                                <li class="flex justify-between items-center py-2">
-                                    <a href="#" class="text-primary hover:text-blue-500 transition-colors">技术思考</a>
-                                    <span class="bg-gray-200 dark:bg-gray-700 text-xs font-medium px-2 py-1 rounded-full">12</span>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- 标签云 -->
-                        <div class="card bg-card shadow-theme border border-theme p-6">
-                            <h3 class="text-lg font-bold mb-4 text-primary">热门标签</h3>
-                            <div class="flex flex-wrap gap-2">
-                                <a href="#" class="bg-gray-200 dark:bg-gray-700 text-primary text-sm px-3 py-1 rounded-full hover:bg-blue-500 hover:text-white transition-colors">CSS</a>
-                                <a href="#" class="bg-gray-200 dark:bg-gray-700 text-primary text-sm px-3 py-1 rounded-full hover:bg-blue-500 hover:text-white transition-colors">JavaScript</a>
-                                <a href="#" class="bg-gray-200 dark:bg-gray-700 text-primary text-sm px-3 py-1 rounded-full hover:bg-blue-500 hover:text-white transition-colors">响应式设计</a>
-                                <a href="#" class="bg-gray-200 dark:bg-gray-700 text-primary text-sm px-3 py-1 rounded-full hover:bg-blue-500 hover:text-white transition-colors">用户体验</a>
-                                <a href="#" class="bg-gray-200 dark:bg-gray-700 text-primary text-sm px-3 py-1 rounded-full hover:bg-blue-500 hover:text-white transition-colors">Vue</a>
-                                <a href="#" class="bg-gray-200 dark:bg-gray-700 text-primary text-sm px-3 py-1 rounded-full hover:bg-blue-500 hover:text-white transition-colors">React</a>
-                            </div>
-                        </div>
-                    </aside>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- 页脚 -->
-    <footer class="bg-card border-t border-theme mt-16">
-        <div class="container mx-auto px-4 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <div class="text-2xl font-bold text-primary mb-4" style="font-family: 'Noto Serif SC', serif;">
-                        墨染时光
-                    </div>
-                    <p class="text-secondary mb-4">一个专注于设计思维、用户体验和数字生活的博客，旨在分享有价值的内容和思考。</p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-secondary hover:text-blue-500 transition-colors" aria-label="微博">
-                            <i class="fab fa-weibo text-xl"></i>
-                        </a>
-                        <a href="#" class="text-secondary hover:text-blue-500 transition-colors" aria-label="微信">
-                            <i class="fab fa-weixin text-xl"></i>
-                        </a>
-                        <a href="#" class="text-secondary hover:text-blue-500 transition-colors" aria-label="GitHub">
-                            <i class="fab fa-github text-xl"></i>
-                        </a>
-                    </div>
-                </div>
-                <div>
-                    <h3 class="text-lg font-bold mb-4 text-primary">快速链接</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-secondary hover:text-blue-500 transition-colors">首页</a></li>
-                        <li><a href="#" class="text-secondary hover:text-blue-500 transition-colors">文章归档</a></li>
-                        <li><a href="#" class="text-secondary hover:text-blue-500 transition-colors">分类浏览</a></li>
-                        <li><a href="#" class="text-secondary hover:text-blue-500 transition-colors">关于作者</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-lg font-bold mb-4 text-primary">内容分类</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-secondary hover:text-blue-500 transition-colors">UI/UX设计</a></li>
-                        <li><a href="#" class="text-secondary hover:text-blue-500 transition-colors">前端开发</a></li>
-                        <li><a href="#" class="text-secondary hover:text-blue-500 transition-colors">移动设计</a></li>
-                        <li><a href="#" class="text-secondary hover:text-blue-500 transition-colors">设计思维</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-lg font-bold mb-4 text-primary">关注与支持</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <p class="text-secondary text-sm mb-2">扫码关注公众号</p>
-                            <div class="w-32 h-32 bg-gray-200 flex items-center justify-center">
-                                <i class="fas fa-qrcode text-4xl text-gray-400"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <p class="text-secondary text-sm mb-2">支持创作者</p>
-                            <div class="w-32 h-32 bg-gray-200 flex items-center justify-center">
-                                <i class="fas fa-qrcode text-4xl text-gray-400"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="border-t border-theme mt-8 pt-8 text-center text-secondary">
-                <p>&copy; 2023 墨染时光 - 保留所有权利</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- 二维码弹窗 -->
-    <div id="qrcodeModal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div class="bg-card rounded-xl shadow-2xl max-w-sm w-full p-6">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-bold text-primary">扫码关注我们</h3>
-                <button id="qrcodeClose" class="text-secondary hover:text-primary transition-colors" aria-label="关闭">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-            <div class="bg-white p-4 rounded-lg mb-4 flex justify-center">
-                <div class="w-48 h-48 bg-gray-200 flex items-center justify-center">
-                    <i class="fas fa-qrcode text-6xl text-gray-400"></i>
-                </div>
-            </div>
-            <p class="text-center text-secondary">获取最新文章和资源</p>
-        </div>
+  <!-- header -->
+  <header>
+    <div class="brand" role="banner">
+      <!-- SVG Logo: 可替换为你的 SVG -->
+      <div class="logo-svg" aria-hidden>
+        <svg width="38" height="38" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0.5" y="0.5" width="47" height="47" rx="10.5" stroke="rgba(255,255,255,0.06)"/>
+          <path d="M12 34C14.5 29 18 22 24 22C30 22 34 29 36 34" stroke="#FFD166" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="24" cy="16" r="6" stroke="#7CF2FF" stroke-width="2"/>
+        </svg>
+      </div>
+      <div>
+        <h1 style="margin:0">Cecily Dance Company</h1>
+        <p style="margin:0;color:var(--muted);font-size:12px">Professional Dance Ensemble</p>
+      </div>
     </div>
 
-    <script>
-        // 主题切换功能
-        const themeToggle = document.getElementById('themeToggle');
-        const body = document.body;
-        
-        // 检查本地存储或系统偏好
-        const savedTheme = localStorage.getItem('theme');
-        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        
-        // 初始化主题
-        if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
-            body.classList.replace('light', 'dark');
-            themeToggle.innerHTML = '<i class="fas fa-sun text-primary"></i>';
-        }
-        
-        themeToggle.addEventListener('click', () => {
-            if (body.classList.contains('light')) {
-                body.classList.replace('light', 'dark');
-                themeToggle.innerHTML = '<i class="fas fa-sun text-primary"></i>';
-                localStorage.setItem('theme', 'dark');
-            } else {
-                body.classList.replace('dark', 'light');
-                themeToggle.innerHTML = '<i class="fas fa-moon text-primary"></i>';
-                localStorage.setItem('theme', 'light');
-            }
-        });
-        
-        // 移动端菜单功能
-        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-        const mobileMenuClose = document.getElementById('mobileMenuClose');
-        const mobileMenu = document.getElementById('mobileMenu');
-        
-        mobileMenuToggle.addEventListener('click', () => {
-            mobileMenu.classList.remove('hidden');
-        });
-        
-        mobileMenuClose.addEventListener('click', () => {
-            mobileMenu.classList.add('hidden');
-        });
-        
-        // 二维码弹窗功能
-        const qrcodeToggle = document.getElementById('qrcodeToggle');
-        const qrcodeClose = document.getElementById('qrcodeClose');
-        const qrcodeModal = document.getElementById('qrcodeModal');
-        
-        qrcodeToggle.addEventListener('click', () => {
-            qrcodeModal.classList.remove('hidden');
-        });
-        
-        qrcodeClose.addEventListener('click', () => {
-            qrcodeModal.classList.add('hidden');
-        });
-        
-        // 点击弹窗外部关闭
-        qrcodeModal.addEventListener('click', (e) => {
-            if (e.target === qrcodeModal) {
-                qrcodeModal.classList.add('hidden');
-            }
-        });
-        
-        // 轮播图功能
-        const carousel = document.getElementById('carousel');
-        const carouselPrev = document.getElementById('carouselPrev');
-        const carouselNext = document.getElementById('carouselNext');
-        const carouselIndicators = document.querySelectorAll('.carousel-indicator');
-        
-        let currentSlide = 0;
-        const totalSlides = document.querySelectorAll('.carousel-item').length;
-        
-        function updateCarousel() {
-            carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
-            
-            // 更新指示器
-            carouselIndicators.forEach((indicator, index) => {
-                if (index === currentSlide) {
-                    indicator.classList.replace('bg-opacity-50', 'bg-opacity-100');
-                } else {
-                    indicator.classList.replace('bg-opacity-100', 'bg-opacity-50');
-                }
-            });
-        }
-        
-        carouselNext.addEventListener('click', () => {
-            currentSlide = (currentSlide + 1) % totalSlides;
-            updateCarousel();
-        });
-        
-        carouselPrev.addEventListener('click', () => {
-            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-            updateCarousel();
-        });
-        
-        // 为文章卡片添加点击事件
-        document.querySelectorAll('.article-card').forEach(card => {
-            card.addEventListener('click', () => {
-                // 在实际应用中，这里应该跳转到文章详情页
-                const title = card.querySelector('h3').textContent;
-                alert(`跳转到文章: ${title}`);
-            });
-        });
-        
-        // 键盘导航支持
-        document.addEventListener('keydown', (e) => {
-            // ESC键关闭弹窗和菜单
-            if (e.key === 'Escape') {
-                if (!mobileMenu.classList.contains('hidden')) {
-                    mobileMenu.classList.add('hidden');
-                }
-                if (!qrcodeModal.classList.contains('hidden')) {
-                    qrcodeModal.classList.add('hidden');
-                }
-            }
-        });
-    </script>
+    <nav aria-label="Main navigation">
+      <a href="#about" class="zh">关于</a><a href="#about" class="en">About</a>
+      <a href="#shows" class="zh">演出</a><a href="#shows" class="en">Shows</a>
+      <a href="#gallery" class="zh">画廊</a><a href="#gallery" class="en">Gallery</a>
+      <a href="#contact" class="zh">联系</a><a href="#contact" class="en">Contact</a>
+      <button class="lang-switch" onclick="toggleLang()">中 / EN</button>
+    </nav>
+  </header>
+
+  <!-- Spotlight that follows mouse -->
+  <div class="spotlight" id="spotlight" aria-hidden="true"></div>
+
+  <!-- Hero -->
+  <section class="hero" role="region" aria-label="Hero">
+    <div class="hero-inner container">
+      <div style="opacity:0; transform:translateY(18px); animation:enter .9s cubic-bezier(.2,.9,.24,1) forwards .12s">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:8px">
+          <h2 class="hero-title">
+            <span class="zh">以舞见世界 · 点亮舞台</span>
+            <span class="en">Movement Meets World · Illuminate The Stage</span>
+          </h2>
+          <div class="signature">Cecily</div>
+          <p class="hero-sub muted">
+            <span class="zh">编舞 · 演出 · 教学 · 巡演</span>
+            <span class="en">Choreography · Performance · Teaching · Touring</span>
+          </p>
+
+          <div class="hero-ctas">
+            <a href="#shows" class="btn"><span class="zh">演出与节目</span><span class="en">Shows & Repertoire</span></a>
+            <a href="#contact" class="btn ghost"><span class="zh">预定/联系</span><span class="en">Book / Contact</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <!-- About / Shows -->
+    <section id="about" class="section">
+      <div class="container">
+        <h2 class="section-title"><span class="zh">关于我们</span><span class="en">About Us</span></h2>
+        <p class="lead">
+          <span class="zh">Cecily Dance Company 是一支跨文化舞团，擅长将传统舞蹈元素与当代编舞语言融合，呈现具有视觉张力与情感厚度的舞台作品。</span>
+          <span class="en">Cecily Dance Company blends traditional forms with contemporary choreography to create visually striking and emotionally resonant stage works.</span>
+        </p>
+
+        <div class="about-grid" style="margin-top:24px">
+          <div class="panel">
+            <h3 style="margin:0 0 8px 0"><span class="zh">我们的使命</span><span class="en">Our Mission</span></h3>
+            <p class="muted">
+              <span class="zh">通过跨文化合作与教育项目，推动公众对舞蹈的欣赏与参与。</span>
+              <span class="en">To engage audiences through cross-cultural collaborations and educational programmes.</span>
+            </p>
+          </div>
+
+          <div class="panel">
+            <h3 style="margin:0 0 8px 0"><span class="zh">核心团队</span><span class="en">Core Team</span></h3>
+            <p class="muted">
+              <span class="zh">艺术总监：Cecily · 首席编舞与舞蹈导师</span>
+              <span class="en">Artistic Director: Cecily · Lead Choreographer & Dance Tutor</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Shows / Timeline -->
+    <section id="shows" class="section">
+      <div class="container">
+        <h2 class="section-title"><span class="zh">主要演出</span><span class="en">Major Shows</span></h2>
+        <div class="panel" style="padding:18px">
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="dot"></div>
+              <div class="txt"><strong>2024</strong> — <span class="zh">现代舞剧《破晓》 — 国际巡演</span><span class="en">Contemporary Piece "Dawn" — International Tour</span></div>
+            </div>
+            <div class="timeline-item">
+              <div class="dot"></div>
+              <div class="txt"><strong>2023</strong> — <span class="zh">国家剧院联演《光》</span><span class="en">National Theatre Collaboration "Light"</span></div>
+            </div>
+            <div class="timeline-item">
+              <div class="dot"></div>
+              <div class="txt"><strong>2022</strong> — <span class="zh">欧洲艺术节驻演</span><span class="en">European Arts Festival Residency</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery + Carousel -->
+    <section id="gallery" class="section">
+      <div class="container">
+        <h2 class="section-title"><span class="zh">舞台画廊</span><span class="en">Stage Gallery</span></h2>
+        <p class="lead"><span class="zh">点击缩略图查看大图 / 自动轮播 / 支持键盘← → 切换</span><span class="en">Click thumbnails to view larger / auto carousel / keyboard ← →</span></p>
+
+        <div class="gallery" aria-live="polite">
+          <div class="carousel panel">
+            <div class="slides" id="slides">
+              <!-- 替换为你的高质量剧照链接 -->
+              <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=1600&auto=format&fit=crop" class="active" alt="演出1">
+              <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=1600&auto=format&fit=crop" alt="演出2">
+              <img src="https://images.unsplash.com/photo-1520971349230-34462229934b?q=80&w=1600&auto=format&fit=crop" alt="演出3">
+              <img src="https://images.unsplash.com/photo-1549187774-b4e9b0445b92?q=80&w=1600&auto=format&fit=crop" alt="演出4">
+            </div>
+            <!-- controls -->
+            <button id="prev" aria-label="Previous" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:#fff;font-size:28px;cursor:pointer;opacity:0.8">‹</button>
+            <button id="next" aria-label="Next" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:#fff;font-size:28px;cursor:pointer;opacity:0.8">›</button>
+          </div>
+
+          <div class="thumbs">
+            <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=800&auto=format&fit=crop" data-index="0" class="active" alt="缩略1">
+            <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=800&auto=format&fit=crop" data-index="1" alt="缩略2">
+            <img src="https://images.unsplash.com/photo-1520971349230-34462229934b?q=80&w=800&auto=format&fit=crop" data-index="2" alt="缩略3">
+            <img src="https://images.unsplash.com/photo-1549187774-b4e9b0445b92?q=80&w=800&auto=format&fit=crop" data-index="3" alt="缩略4">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Video showcase -->
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title"><span class="zh">精选视频</span><span class="en">Featured Videos</span></h2>
+        <p class="lead"><span class="zh">点击缩略图在弹窗中播放（支持 YouTube / 本地 mp4）</span><span class="en">Click thumbnails to play in a lightbox (YouTube or mp4)</span></p>
+
+        <div class="video-panel">
+          <div class="video-card panel">
+            <img class="video-thumb" src="https://images.unsplash.com/photo-1520971349230-34462229934b?q=80&w=1400&auto=format&fit=crop" alt="video1" data-type="youtube" data-src="https://www.youtube.com/embed/dQw4w9WgXcQ">
+            <div style="margin-top:10px">
+              <strong>《舞台纪录 — 片段》</strong>
+              <div class="muted" style="margin-top:6px">3:42 · 现场片段</div>
+            </div>
+          </div>
+
+          <div class="video-card panel">
+            <img class="video-thumb" src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=1400&auto=format&fit=crop" alt="video2" data-type="mp4" data-src="https://cdn.pixabay.com/vimeo/458332206/dance-47983.mp4?width=1280">
+            <div style="margin-top:10px">
+              <strong>教学短片 — 街舞基础</strong>
+              <div class="muted" style="margin-top:6px">6:12 · 教学</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact / Booking -->
+    <section id="contact" class="section">
+      <div class="container">
+        <h2 class="section-title"><span class="zh">预定 / 联系</span><span class="en">Booking / Contact</span></h2>
+        <p class="lead"><span class="zh">填写表单将打开邮箱（可替换为后端 API）。请在主题中注明演出城市与日期。</span><span class="en">Filling the form opens your mail client (can be swapped to backend API). Please include city & date in subject.</span></p>
+
+        <div class="contact-grid">
+          <div class="panel contact-form">
+            <form id="bookingForm" onsubmit="handleBooking(event)" autocomplete="on">
+              <label class="zh">联系人姓名</label><label class="en" style="display:none">Name</label>
+              <input id="name" name="name" required placeholder="你的姓名 / Your name" />
+
+              <label class="zh" style="margin-top:8px">联系邮箱</label><label class="en" style="display:none">Email</label>
+              <input id="email" name="email" type="email" required placeholder="you@example.com" />
+
+              <label class="zh" style="margin-top:8px">活动城市 & 日期</label>
+              <input id="date" name="date" placeholder="城市 · YYYY-MM-DD" required />
+
+              <label class="zh" style="margin-top:8px">需求说明</label>
+              <textarea id="message" rows="5" placeholder="活动类型 / 节目长度 / 预算范围..." required></textarea>
+
+              <div class="contact-actions">
+                <button class="btn" type="submit"><span class="zh">发送预定邮件</span><span class="en">Send Booking Email</span></button>
+                <a class="btn ghost" href="mailto:your.email@example.com"><span class="zh">直接发邮件</span><span class="en">Email Directly</span></a>
+              </div>
+              <div style="margin-top:8px" class="muted"><span class="zh">注：发送会调用本地邮箱客户端，你也可以替换为后端 API 接口。</span><span class="en">Note: opens your mail client. You can replace it with backend API.</span></div>
+            </form>
+          </div>
+
+          <div class="panel">
+            <h4 style="margin-top:0"><span class="zh">经纪 / 合作</span><span class="en">Management</span></h4>
+            <p class="muted"><strong>Email</strong> <a href="mailto:your.email@example.com" style="color:var(--gold); text-decoration:none">your.email@example.com</a></p>
+            <p class="muted"><strong>电话</strong> +60 12-345 6789</p>
+            <p class="muted"><strong>常驻城市</strong> 吉隆坡 • Kuala Lumpur</p>
+            <hr style="border:none;border-top:1px solid rgba(255,255,255,0.03);margin:12px 0">
+            <p class="muted"><span class="zh">简短提示：</span><span class="en">Tips:</span></p>
+            <ul style="color:var(--muted); font-size:14px; padding-left:18px">
+              <li><span class="zh">提前 6—8 周联系以安排巡演档期</span><span class="en">Contact 6—8 weeks in advance for touring</span></li>
+              <li><span class="zh">提供场地大小与音响要求能加快报价</span><span class="en">Provide venue size & tech specs to speed up quote</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Lightbox for gallery / videos -->
+  <div id="lightbox" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,2,6,0.85);z-index:120" role="dialog" aria-modal="true">
+    <div style="position:relative; width:90%; max-width:1100px; max-height:86vh">
+      <button id="lb-close" aria-label="Close" style="position:absolute;right:-18px;top:-18px;background:#111;border:none;color:#fff;padding:10px;border-radius:50%;font-size:16px;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,0.6)">✕</button>
+      <div id="lb-content" style="background:#000;border-radius:10px;overflow:hidden; width:100%; height:100%">
+        <!-- content injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div style="max-width:var(--maxw); margin:0 auto; padding:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div style="color:var(--muted)">© <span id="year"></span> Cecily Dance Company</div>
+        <div style="color:var(--muted)">Designed for stage presentation · <span class="muted">KL / International</span></div>
+      </div>
+    </div>
+  </footer>
+
+<script>
+  // --- set year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // --- language toggle
+  function toggleLang(){
+    const html = document.documentElement;
+    html.dataset.lang = html.dataset.lang === 'zh' ? 'en' : 'zh';
+    // also toggle small labels in form for accessibility
+    document.querySelectorAll('.contact-form .zh, .contact-form .en').forEach(el=>{
+      // nothing required; CSS handles visibility
+    });
+  }
+
+  // --- Spotlight follow mouse (desktop only)
+  const spotlight = document.getElementById('spotlight');
+  function moveSpot(e){
+    // use clientX clientY; on touch devices skip
+    const x = e.clientX;
+    const y = e.clientY;
+    spotlight.style.left = x + 'px';
+    spotlight.style.top = y + 'px';
+  }
+  // throttle with requestAnimationFrame
+  let raf;
+  window.addEventListener('mousemove', (e)=>{
+    if(raf) cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(()=> moveSpot(e));
+  });
+  // reduce effect on touch devices
+  window.addEventListener('touchstart', (e)=>{
+    const t = e.touches[0];
+    spotlight.style.left = t.clientX + 'px';
+    spotlight.style.top = t.clientY + 'px';
+  }, {passive:true});
+
+  // --- Gallery carousel logic
+  const slides = Array.from(document.querySelectorAll('#slides img'));
+  const thumbs = Array.from(document.querySelectorAll('.thumbs img'));
+  let idx = 0;
+  let autoplay = true;
+  slides.forEach((s,i)=> s.dataset.index = i);
+  function showSlide(i){
+    slides.forEach(s => s.classList.remove('active'));
+    thumbs.forEach(t => t.classList.remove('active'));
+    slides[i].classList.add('active');
+    thumbs[i].classList.add('active');
+    idx = i;
+  }
+  // thumbnail click
+  thumbs.forEach(t=>{
+    t.addEventListener('click', ()=> {
+      const i = Number(t.dataset.index);
+      autoplay = false;
+      showSlide(i);
+    });
+  });
+  // prev / next
+  document.getElementById('prev').addEventListener('click', ()=> { autoplay=false; showSlide((idx-1+slides.length)%slides.length) });
+  document.getElementById('next').addEventListener('click', ()=> { autoplay=false; showSlide((idx+1)%slides.length) });
+  // auto play
+  setInterval(()=>{ if(autoplay) showSlide((idx+1)%slides.length) }, 4200);
+  // keyboard navigation
+  window.addEventListener('keydown', (e)=>{
+    if(e.key === 'ArrowLeft') { autoplay=false; showSlide((idx-1+slides.length)%slides.length) }
+    if(e.key === 'ArrowRight') { autoplay=false; showSlide((idx+1)%slides.length) }
+  });
+
+  // --- Lightbox for videos & gallery (click slide opens lightbox)
+  const lightbox = document.getElementById('lightbox');
+  const lbContent = document.getElementById('lb-content');
+  const lbClose = document.getElementById('lb-close');
+
+  // open image in lightbox by clicking visible slide
+  document.querySelectorAll('.carousel .slides img').forEach(img=>{
+    img.addEventListener('click', ()=> {
+      openLightboxImage(img.src, img.alt);
+    });
+  });
+  // thumbnails open same
+  thumbs.forEach(t=> t.addEventListener('dblclick', ()=> openLightboxImage(t.src, t.alt)));
+
+  function openLightboxImage(src, alt){
+    lbContent.innerHTML = `<img src="${src}" alt="${alt||''}" style="width:100%;height:100%;object-fit:contain;display:block;background:#000" />`;
+    lightbox.style.display='flex';
+    document.body.style.overflow='hidden';
+  }
+
+  // video thumbs open iframe or video element
+  document.querySelectorAll('.video-thumb').forEach(v=>{
+    v.addEventListener('click', ()=>{
+      const type = v.dataset.type;
+      const src = v.dataset.src;
+      if(type === 'youtube'){
+        lbContent.innerHTML = `<iframe src="${src}?autoplay=1" width="100%" height="100%" style="border:0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+      } else {
+        lbContent.innerHTML = `<video src="${src}" controls autoplay style="width:100%;height:100%;object-fit:contain;background:#000"></video>`;
+      }
+      lightbox.style.display='flex';
+      document.body.style.overflow='hidden';
+    });
+  });
+
+  lbClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', (e)=>{
+    if(e.target === lightbox) closeLightbox();
+  });
+  function closeLightbox(){
+    lightbox.style.display='none';
+    lbContent.innerHTML = '';
+    document.body.style.overflow='';
+  }
+
+  // --- Booking form: mailto prefill
+  function handleBooking(e){
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const date = document.getElementById('date').value.trim();
+    const message = document.getElementById('message').value.trim();
+    if(!name || !email || !date || !message){ alert('请完整填写表单 / Please complete the form.'); return; }
+    const subject = encodeURIComponent(`[预定] ${name} · ${date}`);
+    const body = encodeURIComponent(`姓名: ${name}\n邮箱: ${email}\n城市/日期: ${date}\n\n需求:\n${message}`);
+    // NOTE: 请替换为你的联系邮箱
+    const to = 'your.email@example.com';
+    window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+  }
+
+  // --- entrance animation for hero (simple)
+  (function animateHero(){
+    const e = document.querySelector('.hero-inner > div');
+    if(!e) return;
+    // already set with CSS animation
+  })();
+
+</script>
 </body>
 </html>
